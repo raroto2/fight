@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walk and Run · 기록 인증 현황</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=JetBrains+Mono:wght@500;700;800&family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --track-navy:#1A0F3D;
+    --track-navy-2:#2A1B5C;
+    --bib-orange:#FF7A1A;
+    --bib-orange-dark:#E85D00;
+    --trail-green:#00E8B8;
+    --trail-green-light:rgba(0,232,184,0.14);
+    --warn-red:#FF3D6A;
+    --warn-red-light:rgba(255,61,106,0.14);
+    --medal-gold:#FFD639;
+    --medal-silver:#B9C4E0;
+    --medal-bronze:#FF7A1A;
+    --paper:rgba(255,255,255,0.05);
+    --card:rgba(20,10,45,0.72);
+    --ink:#F3EEFF;
+    --muted:#A79BD1;
+    --line:rgba(180,150,255,0.22);
+    --glass-border:rgba(180,150,255,0.35);
+    --glass-shadow:0 0 0 1px rgba(180,150,255,0.15), 0 10px 30px rgba(255,61,154,0.14);
+    --neon-pink:#FF3D9A;
+    --neon-cyan:#00E5FF;
+    --neon-purple:#8B5CF6;
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:9px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{
+    min-height:100%;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(255,61,154,0.35), transparent 40%),
+      radial-gradient(circle at 85% 5%, rgba(0,229,255,0.28), transparent 42%),
+      radial-gradient(circle at 25% 85%, rgba(139,92,246,0.32), transparent 45%),
+      radial-gradient(circle at 90% 80%, rgba(255,214,57,0.16), transparent 40%),
+      radial-gradient(1.5px 1.5px at 10% 20%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 30% 60%, #fff, transparent),
+      radial-gradient(1px 1px at 50% 15%, #fff, transparent),
+      radial-gradient(1px 1px at 70% 45%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 85% 25%, #fff, transparent),
+      radial-gradient(1px 1px at 95% 65%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 40% 90%, #fff, transparent),
+      radial-gradient(1px 1px at 60% 75%, #fff, transparent),
+      linear-gradient(160deg, #0B0620 0%, #170B3A 45%, #0B0620 100%);
+    background-attachment:fixed;
+    background-size:auto;
+  }
+  body{
+    font-family:'Noto Sans KR',-apple-system,sans-serif;
+    color:var(--ink);
+    padding:18px;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'JetBrains Mono','Space Mono',monospace;}
+  .container{max-width:1080px;margin:0 auto;}
+  button{font-family:inherit;}
+  :focus-visible{outline:2px solid var(--neon-cyan);outline-offset:2px;}
+
+  /* ===== Header : cosmic marquee ===== */
+  header.bib-header{
+    background:linear-gradient(135deg, rgba(139,92,246,0.22) 0%, rgba(255,61,154,0.14) 100%);
+    -webkit-backdrop-filter:blur(14px);
+    backdrop-filter:blur(14px);
+    border-radius:var(--radius-lg);
+    padding:20px 26px;
+    margin-bottom:18px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;
+    position:relative;
+    border:1px solid var(--glass-border);
+    box-shadow:var(--glass-shadow);
+    overflow:hidden;
+  }
+  header.bib-header::after{
+    content:"";
+    position:absolute; left:0; right:0; top:0; height:3px;
+    background:linear-gradient(90deg, var(--neon-pink), var(--neon-cyan), var(--medal-gold), var(--neon-purple));
+  }
+  .bib-id{display:flex; align-items:center; gap:14px;}
+  .bib-num{
+    font-family:'Bungee',sans-serif;
+    background:linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+    color:#fff;
+    font-size:0.68rem;
+    letter-spacing:1.5px;
+    padding:7px 11px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.35);
+    box-shadow:0 0 14px rgba(255,61,154,0.55);
+    transform:rotate(-3deg);
+  }
+  h1{
+    font-family:'Bungee',sans-serif;
+    background:linear-gradient(90deg, var(--neon-cyan), var(--neon-pink) 55%, var(--medal-gold));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    font-size:1.55rem;
+    letter-spacing:0.5px;
+    filter:drop-shadow(0 0 10px rgba(255,61,154,0.35));
+  }
+  .subtitle{color:var(--muted); font-size:0.8rem; margin-top:3px; font-family:'JetBrains Mono',monospace; letter-spacing:0.5px;}
+
+  .month-nav{display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.06); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); padding:6px 8px 6px 16px; border-radius:14px; border:1px solid var(--glass-border);}
+  .month-nav button{
+    background:linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color:#0B0620; border:none; border-radius:9px;
+    width:30px; height:30px; font-weight:bold; cursor:pointer; font-size:1rem;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 10px rgba(0,229,255,0.5);
+  }
+  .month-nav button:hover{filter:brightness(1.15);}
+  .month-display{font-family:'JetBrains Mono',monospace; font-size:1rem; font-weight:700; color:var(--ink); min-width:92px; text-align:center; letter-spacing:1px;}
+
+  /* ===== Tabs : neon capsule selector ===== */
+  .nav-tabs{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px;
+    background:rgba(255,255,255,0.04);
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+    padding:6px; border-radius:16px; margin-bottom:20px; border:1px solid var(--glass-border);
+    box-shadow:var(--glass-shadow);
+  }
+  .tab-btn{
+    background:transparent; border:none; padding:12px; border-radius:11px;
+    font-weight:700; font-size:0.86rem; cursor:pointer; color:var(--muted);
+    transition:background .15s, color .15s;
+  }
+  .tab-btn:hover{background:rgba(255,255,255,0.06); color:var(--ink);}
+  .tab-btn.active{background:linear-gradient(135deg, var(--neon-pink), var(--neon-purple)); color:#fff; box-shadow:0 0 16px rgba(255,61,154,0.5);}
+
+  /* ===== Cards : cosmic panels ===== */
+  .card{
+    background:var(--card);
+    -webkit-backdrop-filter:blur(18px);
+    backdrop-filter:blur(18px);
+    padding:22px; border-radius:var(--radius-lg);
+    border:1px solid var(--glass-border);
+    box-shadow:var(--glass-shadow);
+    margin-bottom:18px;
+  }
+  .card h2{font-size:1.02rem; color:var(--ink); display:flex; align-items:center; gap:8px; font-weight:800; letter-spacing:0.2px;}
+  .grid-2{display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:18px;}
+
+  /* ===== Ranking (dashboard left) ===== */
+  .rank-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 14px;
+    border-radius:12px; margin-bottom:7px; background:var(--paper);
+    border:1px solid var(--line);
+  }
+  .rank-row.gold{background:linear-gradient(90deg, rgba(255,214,57,0.14), var(--paper)); border-color:rgba(255,214,57,0.4);}
+  .rank-left{display:flex; align-items:center; gap:10px; min-width:0; flex:1 1 auto;}
+  .rank-badge{
+    width:28px; height:28px; border-radius:50%; background:var(--neon-purple); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; flex-shrink:0;
+    box-shadow:0 0 8px rgba(139,92,246,0.6);
+  }
+  .rank-badge.r1{background:var(--medal-gold); color:#1A0F3D; box-shadow:0 0 10px rgba(255,214,57,0.7);}
+  .rank-badge.r2{background:var(--medal-silver); color:#1A0F3D; box-shadow:0 0 10px rgba(185,196,224,0.6);}
+  .rank-badge.r3{background:var(--medal-bronze); color:#1A0F3D; box-shadow:0 0 10px rgba(255,122,26,0.6);}
+  .rank-name-wrap{display:flex; flex-direction:column; gap:2px; min-width:0; flex:1 1 auto;}
+  .rank-name{font-weight:700; font-size:0.94rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink);}
+  .rank-team-tag{font-size:0.66rem; font-weight:700; color:#0B0620; background:var(--neon-cyan); padding:2px 7px; border-radius:20px; width:fit-content;}
+  .rank-right{display:flex; align-items:center; gap:8px; flex-shrink:0;}
+  .rank-bar{width:52px; height:6px; border-radius:4px; background:rgba(255,255,255,0.08); overflow:hidden; flex-shrink:0;}
+  .rank-bar-fill{height:100%; background:linear-gradient(90deg, var(--neon-cyan), var(--trail-green)); border-radius:4px;}
+  .rank-km{font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--trail-green); font-size:0.95rem; min-width:60px; text-align:right; flex-shrink:0;}
+  @media (max-width:380px){
+    .rank-bar{display:none;}
+    .rank-km{min-width:auto;}
+  }
+
+  /* ===== Team battle (weekly 25km shortfall by team) ===== */
+  .team-card{
+    border:1px solid var(--line); background:var(--paper); border-radius:var(--radius-md); padding:13px 14px; margin-bottom:12px;
+  }
+  .team-card.leader{border-color:rgba(255,214,57,0.6); background:linear-gradient(90deg, rgba(255,214,57,0.1), var(--paper)); box-shadow:0 0 14px rgba(255,214,57,0.18);}
+  .team-head{display:flex; justify-content:space-between; align-items:center; padding-bottom:8px; margin-bottom:9px; border-bottom:1px dashed var(--line); gap:8px; flex-wrap:wrap;}
+  .team-head-left{display:flex; align-items:center; gap:9px;}
+  .team-rank-badge{width:26px; height:26px; border-radius:50%; background:var(--neon-purple); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; box-shadow:0 0 8px rgba(139,92,246,0.6);}
+  .team-rank-badge.r1{background:var(--medal-gold); color:#1A0F3D;}
+  .team-rank-badge.r2{background:var(--medal-silver); color:#1A0F3D;}
+  .team-rank-badge.r3{background:var(--medal-bronze); color:#1A0F3D;}
+  .team-name{font-weight:800; font-size:0.95rem; color:var(--ink);}
+  .team-meta{display:flex; align-items:center; gap:8px;}
+  .team-total{font-family:'JetBrains Mono',monospace; font-weight:800; font-size:1rem; color:var(--trail-green);}
+  .team-gap{font-size:0.72rem; font-weight:700; padding:3px 9px; border-radius:20px; background:var(--warn-red-light); color:var(--warn-red);}
+  .team-gap.lead{color:#1A0F3D; background:var(--medal-gold);}
+  .team-achieve{font-size:0.7rem; font-weight:700; color:var(--muted); background:rgba(255,255,255,0.06); padding:3px 9px; border-radius:20px;}
+  .member-mini-row{display:flex; align-items:center; gap:10px; padding:5px 0;}
+  .member-mini-name{font-weight:700; font-size:0.83rem; width:64px; flex-shrink:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--ink);}
+  .member-mini-name.under{color:var(--warn-red);}
+  .member-mini-bar{flex:1; height:8px; border-radius:5px; background:rgba(255,255,255,0.08); overflow:hidden; position:relative;}
+  .member-mini-fill{height:100%; border-radius:5px; background:linear-gradient(90deg, var(--neon-cyan), var(--trail-green));}
+  .member-mini-fill.under{background:var(--warn-red);}
+  .member-mini-km{font-family:'JetBrains Mono',monospace; font-size:0.76rem; font-weight:700; color:var(--muted); width:78px; text-align:right; flex-shrink:0;}
+  .member-mini-km.under{color:var(--warn-red);}
+  .empty-team-hint{font-size:0.82rem; color:var(--muted); text-align:center; padding:20px 0;}
+
+  /* ===== Tables ===== */
+  table{width:100%; border-collapse:collapse; text-align:left;}
+  th, td{padding:10px 8px; border-bottom:1px solid var(--line); font-size:0.88rem; color:var(--ink);}
+  th{color:var(--neon-cyan); font-size:0.74rem; text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap; font-weight:800;}
+  td.mono, th.mono{font-family:'JetBrains Mono',monospace;}
+
+  /* ===== Daily input sheet ===== */
+  .table-scroll{max-height:62vh; overflow:auto;}
+  .input-table-container{
+    max-width:100%; border-radius:12px; border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);
+  }
+  .input-table{border-collapse:separate; border-spacing:0; min-width:920px;}
+  .input-table th, .input-table td{border-right:1px solid var(--line); border-bottom:1px solid var(--line); text-align:center; padding:7px 4px; white-space:nowrap;}
+  .input-table td:first-child{position:sticky; left:0; background:#180D3C; z-index:10; font-weight:700; border-right:2px solid var(--neon-purple); width:112px; min-width:112px; text-align:left; padding-left:10px; color:var(--ink);}
+  .input-table thead th{position:sticky; top:0; background:#22124D; z-index:12;}
+  .input-table thead th:first-child{position:sticky; left:0; top:0; background:#22124D; z-index:20; width:112px; min-width:112px; border-right:2px solid var(--neon-purple);}
+  #tab-attendance .input-table td:nth-child(2){position:sticky; left:112px; background:#180D3C; z-index:10; font-weight:800; color:var(--bib-orange); border-right:2px solid var(--neon-purple); width:64px; min-width:64px;}
+  #tab-attendance .input-table thead th:nth-child(2){position:sticky; left:112px; top:0; background:#22124D; z-index:20; width:64px; min-width:64px; border-right:2px solid var(--neon-purple);}
+  .input-name-cell{display:flex; flex-direction:column; gap:2px;}
+  .input-name-team{font-size:0.64rem; font-weight:700; color:#0B0620; background:var(--neon-cyan); padding:1px 6px; border-radius:20px; width:fit-content;}
+  .day-header{font-size:0.7rem; display:block; font-weight:400; color:var(--muted);}
+  .header-mon{background-color:rgba(0,232,184,0.12) !important; color:var(--trail-green) !important; font-weight:800;}
+  .header-sun{background-color:rgba(255,61,106,0.12) !important; color:var(--warn-red) !important; font-weight:800;}
+  .day-input{
+    width:44px; text-align:center; padding:6px 2px; border:1px solid var(--line); border-radius:8px;
+    background:rgba(255,255,255,0.05); color:var(--ink);
+    font-size:0.83rem; font-weight:700; font-family:'JetBrains Mono',monospace; outline:none; -moz-appearance:textfield;
+  }
+  .day-input::-webkit-outer-spin-button, .day-input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+  .day-input:focus{border-color:var(--neon-cyan); background:rgba(0,229,255,0.1); box-shadow:0 0 0 2px rgba(0,229,255,0.25);}
+
+  /* ===== Members ===== */
+  .member-row{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; row-gap:8px; padding:10px 12px;
+    background:var(--paper);
+    border:1px solid var(--line); border-radius:12px; margin-bottom:7px;
+  }
+  .member-left{display:flex; align-items:center; gap:10px;}
+  .avatar{width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, var(--neon-pink), var(--neon-purple)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; flex-shrink:0; box-shadow:0 0 8px rgba(255,61,154,0.5);}
+  .member-name-wrap{display:flex; flex-direction:column; gap:2px;}
+  .member-team-badge{font-size:0.68rem; font-weight:700; color:var(--trail-green); background:var(--trail-green-light); padding:1px 8px; border-radius:20px; width:fit-content;}
+  .btn-danger{background:var(--warn-red-light); color:var(--warn-red); border:1px solid var(--warn-red); padding:7px 13px; border-radius:9px; font-weight:700; cursor:pointer; font-size:0.82rem;}
+  .btn-danger:hover{background:var(--warn-red); color:#fff;}
+  .btn-edit{background:rgba(0,229,255,0.1); color:var(--neon-cyan); border:1px solid var(--neon-cyan); padding:7px 13px; border-radius:9px; font-weight:700; cursor:pointer; font-size:0.82rem;}
+  .btn-edit:hover{background:var(--neon-cyan); color:#0B0620;}
+  .btn-save{background:var(--trail-green-light); color:var(--trail-green); border:1px solid var(--trail-green); padding:7px 13px; border-radius:9px; font-weight:700; cursor:pointer; font-size:0.82rem;}
+  .btn-save:hover{background:var(--trail-green); color:#0B0620;}
+  .member-row-actions{display:flex; gap:6px; flex-shrink:0;}
+  .member-edit-inputs{display:flex; gap:8px; flex-basis:100%; width:100%;}
+  .member-edit-inputs input{flex:1; min-width:0; padding:8px 10px; border-radius:9px; border:1px solid var(--line); background:rgba(255,255,255,0.05); color:var(--ink); font-size:0.86rem;}
+  .member-edit-inputs input:focus{border-color:var(--neon-cyan);}
+  .member-row:has(.member-edit-inputs) .member-row-actions{flex-basis:100%; width:100%; justify-content:flex-end;}
+  @media (max-width:400px){
+    .member-edit-inputs{flex-direction:column;}
+  }
+  #memberForm{display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;}
+  #memberForm input{flex:1; min-width:120px; padding:11px 12px; border-radius:11px; border:1px solid var(--line); background:rgba(255,255,255,0.05); color:var(--ink); font-size:0.9rem;}
+  #memberForm input:focus{border-color:var(--neon-cyan);}
+  #memberForm button{background:linear-gradient(135deg, var(--neon-pink), var(--neon-purple)); color:#fff; font-weight:700; border:none; padding:11px 18px; border-radius:11px; cursor:pointer; box-shadow:0 0 14px rgba(255,61,154,0.5);}
+  #memberForm button:hover{filter:brightness(1.1);}
+
+  .hidden{display:none;}
+  .hint{font-size:0.78rem; color:var(--muted); margin-bottom:12px;}
+
+  /* ===== 운동 기록 체크 ===== */
+  .att-check{width:30px; height:30px; border-radius:8px; border:1px solid var(--line); background:rgba(255,255,255,0.04); cursor:default; font-weight:700; color:transparent; font-size:0.9rem; display:inline-flex; align-items:center; justify-content:center;}
+  .att-check.on{background:linear-gradient(135deg, var(--trail-green), var(--neon-cyan)); border-color:var(--trail-green); color:#0B0620; box-shadow:0 0 10px rgba(0,232,184,0.5);}
+
+  /* ===== 운동 인증 업로드 ===== */
+  .upload-field{margin-bottom:14px;}
+  .upload-field label{display:block; font-size:0.8rem; font-weight:700; color:var(--muted); margin-bottom:6px;}
+  .upload-field select, .upload-field input[type="date"]{width:100%; padding:10px 12px; border-radius:11px; border:1px solid var(--line); font-size:0.9rem; background:rgba(255,255,255,0.05); color:var(--ink);}
+  .upload-field select:focus, .upload-field input[type="date"]:focus{border-color:var(--neon-cyan);}
+  .upload-drop{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; min-height:110px; border:1px dashed var(--bib-orange); border-radius:12px; background:rgba(255,122,26,0.06); color:var(--muted); font-size:0.85rem; cursor:pointer; text-align:center; padding:14px;}
+  .upload-drop b{color:var(--bib-orange); font-size:0.86rem;}
+  .upload-drop input{display:none;}
+  .upload-row{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line);}
+  .upload-row:last-child{border-bottom:none;}
+  .upload-thumb{width:44px; height:44px; border-radius:9px; object-fit:cover; background:var(--paper); flex-shrink:0;}
+  .upload-fileicon{width:44px; height:44px; border-radius:9px; background:var(--trail-green-light); color:var(--trail-green); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0;}
+  .upload-info{min-width:0; flex:1; display:flex; flex-direction:column; gap:2px;}
+  .upload-info strong{font-size:0.85rem; color:var(--ink);}
+  .upload-info span{font-size:0.72rem; color:var(--muted);}
+  .upload-status{font-size:0.72rem; font-weight:700; color:var(--trail-green); flex-shrink:0; white-space:nowrap;}
+  .upload-status.error{color:var(--warn-red);}
+  .upload-status.syncing{color:var(--muted);}
+  .upload-status-col{display:flex; flex-direction:column; align-items:flex-end; gap:3px; flex-shrink:0;}
+  .upload-distance-badge{font-family:'JetBrains Mono',monospace; font-size:0.72rem; font-weight:700; color:#0B0620; background:var(--trail-green); padding:2px 8px; border-radius:20px; white-space:nowrap;}
+  .upload-distance-badge.not-found{background:var(--muted); color:#0B0620;}
+  .day-input.auto-filled{border-color:var(--trail-green); background:rgba(0,232,184,0.14);}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="bib-header">
+      <div class="bib-id">
+        <span class="bib-num">RUN</span>
+        <div>
+          <h1>Walk and Run</h1>
+          <div class="subtitle"><span id="syncStatus">🔄 연결 중...</span></div>
+        </div>
+      </div>
+      <div class="month-nav">
+        <button onclick="changeMonth(-1)">‹</button>
+        <div id="monthDisplay" class="month-display">2026.09</div>
+        <button onclick="changeMonth(1)">›</button>
+      </div>
+    </header>
+
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('dashboard')">📊 조별현황</button>
+      <button class="tab-btn" onclick="switchTab('attendance')">✅ 일자별현황</button>
+      <button class="tab-btn" onclick="switchTab('input')">✍️ 일별운동량</button>
+      <button class="tab-btn" onclick="switchTab('uploads')">📎 운동업로드</button>
+      <button class="tab-btn" onclick="switchTab('members')">👥 회원관리</button>
+    </div>
+
+    <!-- 조별현황 -->
+    <div id="tab-dashboard" class="tab-content grid-2">
+      <div class="card">
+        <h2 style="color:#9F1239;">⚔️ 조별 대결 현황</h2>
+        <div id="teamBattleList" style="margin-top:14px;"></div>
+      </div>
+      <div class="card">
+        <h2>🏆 이달의 순위 <span style="font-size:0.7rem; color:var(--muted); font-weight:500;">TOP 10</span></h2>
+        <div id="rankingList" style="margin-top:14px;"></div>
+      </div>
+    </div>
+
+    <!-- 일자별현황 (출석 체크) -->
+    <div id="tab-attendance" class="tab-content card hidden">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:6px;">
+        <h2>✅ 일자별현황</h2>
+        <span class="hint" style="margin:0;">운동 인증을 업로드하면 자동으로 체크됩니다 (직접 체크는 할 수 없어요)</span>
+      </div>
+      <div class="input-table-container table-scroll">
+        <table class="input-table">
+          <thead><tr id="attendanceTableHeader"></tr></thead>
+          <tbody id="attendanceTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 일별운동량 (직접 입력) -->
+    <div id="tab-input" class="tab-content card hidden">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:6px;">
+        <h2>✍️ 일별운동량</h2>
+        <span class="hint" style="margin:0;">숫자를 입력하면 자동 저장됩니다 (단위: km)</span>
+      </div>
+      <p class="hint"><span class="day-input auto-filled" style="display:inline-block; width:16px; height:16px; padding:0; vertical-align:-3px; margin-right:4px;"></span>연두색 칸은 운동 인증 사진에서 자동으로 인식된 거리이며, 직접 수정할 수 있습니다.</p>
+      <div class="input-table-container table-scroll">
+        <table class="input-table">
+          <thead><tr id="inputTableHeader"></tr></thead>
+          <tbody id="inputTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 운동업로드 (운동 인증) -->
+    <div id="tab-uploads" class="tab-content grid-2 hidden">
+      <div class="card">
+        <h2>📎 운동업로드</h2>
+        <div style="margin-top:16px;">
+          <div class="upload-field">
+            <label for="uploadMember">회원</label>
+            <select id="uploadMember"></select>
+          </div>
+          <div class="upload-field">
+            <label for="uploadDate">운동 날짜</label>
+            <input type="date" id="uploadDate" />
+          </div>
+          <label class="upload-drop" for="uploadFile">
+            <input type="file" id="uploadFile" accept="image/*,.pdf,.heic,.mov,.mp4" />
+            <b>📷 인증 파일을 선택하세요</b>
+            <span>사진, PDF, 동영상 · 한 번에 1개</span>
+          </label>
+          <p class="hint" style="margin-top:10px;">업로드하면 선택한 회원의 해당 날짜가 자동으로 운동 기록에 체크됩니다.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h2>업로드 기록 <span id="uploadCount" style="font-size:0.75rem; color:var(--muted); font-weight:500;"></span></h2>
+        <div id="uploadList" style="margin-top:14px;"></div>
+      </div>
+    </div>
+
+    <!-- 회원관리 -->
+    <div id="tab-members" class="tab-content card hidden" style="max-width:480px; margin:0 auto;">
+      <h2 style="margin-bottom:15px;">👥 회원관리</h2>
+      <form id="memberForm">
+        <input type="text" id="newMemberName" placeholder="이름" required />
+        <input type="text" id="newMemberTeam" placeholder="조 (예: A조)" required />
+        <button type="submit">추가</button>
+      </form>
+      <div id="memberList"></div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  <!-- OCR (인증 사진에서 거리 km 자동 인식) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <script>
+    // ===== Firebase 초기화 =====
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-oGacWcuChc9WRPFsodTVBCoY8Lb5MI4",
+      authDomain: "fight-3aa41.firebaseapp.com",
+      projectId: "fight-3aa41",
+      storageBucket: "fight-3aa41.firebasestorage.app",
+      messagingSenderId: "736575374612",
+      appId: "1:736575374612:web:1b7db0fbfb3007145aae01"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const membersDocRef = db.collection('walk_and_run_shared').doc('members');
+    const recordsDocRef = db.collection('walk_and_run_shared').doc('records');
+    const attendanceDocRef = db.collection('walk_and_run_shared').doc('attendance');
+    const uploadsDocRef = db.collection('walk_and_run_shared').doc('uploads');
+
+    function setSyncStatus(state) {
+      const el = document.getElementById('syncStatus');
+      if (!el) return;
+      if (state === 'connecting') el.innerHTML = '🔄 연결 중...';
+      else if (state === 'synced') el.innerHTML = '🟢 실시간 동기화 중';
+      else el.innerHTML = '🔴 연결 오류 (Firestore 규칙 확인)';
+    }
+
+    const now = new Date();
+    let currentYear = now.getFullYear();
+    let currentMonth = now.getMonth() + 1;
+    const MEMBERS_PASSWORD = '0777';
+    let membersUnlocked = false;
+
+    let members = [];
+    let recordsMap = {};
+    let autoFillMap = {};    // recordsMap과 같은 key 구조: 운동 인증 사진에서 자동 인식된 값인지 표시
+    let editingMemberId = null;
+    let attendanceMap = {};   // key: `${y}-${mm}-${dd}-${memberId}` => true
+    let uploadRecords = [];  // [{ id, memberId, date, fileName, fileType, fileSize, uploadedAt, downloadUrl, status, distanceKm, ocrStatus }]
+
+    // ===== Firestore 저장 =====
+    function saveMembers() {
+      membersDocRef.set({ list: members }).catch(err => {
+        console.error(err);
+        setSyncStatus('error');
+        alert('회원 정보 저장에 실패했습니다. Firestore 보안 규칙을 확인해주세요.');
+      });
+    }
+    function saveRecords() {
+      recordsDocRef.set({ map: recordsMap, autoFillMap: autoFillMap }).catch(err => {
+        console.error(err);
+        setSyncStatus('error');
+        alert('기록 저장에 실패했습니다. Firestore 보안 규칙을 확인해주세요.');
+      });
+    }
+    function saveAttendance() {
+      attendanceDocRef.set({ map: attendanceMap }).catch(err => {
+        console.error(err);
+        alert('일자별현황 저장에 실패했습니다. Firestore 보안 규칙을 확인해주세요.');
+      });
+    }
+    function saveUploads() {
+      uploadsDocRef.set({ list: uploadRecords }).catch(err => {
+        console.error(err);
+        alert('업로드 기록 저장에 실패했습니다. Firestore 보안 규칙을 확인해주세요.');
+      });
+    }
+
+    // ===== Firestore 실시간 구독 =====
+    let membersReady = false, recordsReady = false;
+    function checkBothReady() {
+      if (membersReady && recordsReady) {
+        setSyncStatus('synced');
+        render();
+      }
+    }
+
+    setSyncStatus('connecting');
+    renderLoading();
+
+    // 회원 목록 구독
+    membersDocRef.onSnapshot(snap => {
+      if (snap.exists && Array.isArray(snap.data().list)) {
+        members = snap.data().list;
+        // 과거 데이터(조 변경 이력이 없는 회원)는 항상 현재 조가 적용되도록 이력을 채워준다
+        members.forEach(m => {
+          if (!Array.isArray(m.teamHistory) || m.teamHistory.length === 0) {
+            m.teamHistory = [{ ym: '0000-01', team: m.team || '' }];
+          }
+        });
+      } else {
+        members = [];
+      }
+      membersReady = true;
+      checkBothReady();
+    }, err => { console.error(err); setSyncStatus('error'); });
+
+    // 운동 기록 구독
+    recordsDocRef.onSnapshot(snap => {
+      if (snap.exists && snap.data().map) {
+        recordsMap = snap.data().map;
+      } else {
+        recordsMap = {};
+      }
+      autoFillMap = (snap.exists && snap.data().autoFillMap) ? snap.data().autoFillMap : {};
+      recordsReady = true;
+      checkBothReady();
+    }, err => { console.error(err); setSyncStatus('error'); });
+
+    // 운동 기록 체크(출석) 구독
+    attendanceDocRef.onSnapshot(snap => {
+      attendanceMap = (snap.exists && snap.data().map) ? snap.data().map : {};
+      if (membersReady && recordsReady) render();
+    }, err => { console.error(err); });
+
+    // 운동 인증 업로드 구독
+    uploadsDocRef.onSnapshot(snap => {
+      uploadRecords = (snap.exists && Array.isArray(snap.data().list)) ? snap.data().list : [];
+      if (membersReady && recordsReady) render();
+    }, err => { console.error(err); });
+
+    function changeMonth(delta) {
+      currentMonth += delta;
+      if (currentMonth < 1) { currentMonth = 12; currentYear -= 1; }
+      else if (currentMonth > 12) { currentMonth = 1; currentYear += 1; }
+      render();
+    }
+
+    function switchTab(tabId) {
+      const clickedBtn = event.target.closest('.tab-btn');
+      if (tabId === 'members' && !membersUnlocked) {
+        const pw = window.prompt('회원관리 접근 비밀번호를 입력하세요.');
+        if (pw === null) return;
+        if (pw !== MEMBERS_PASSWORD) {
+          alert('비밀번호가 올바르지 않습니다.');
+          return;
+        }
+        membersUnlocked = true;
+      }
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+      if (clickedBtn) clickedBtn.classList.add('active');
+    }
+
+    function formatDate(y, m, d) {
+      const mm = String(m).padStart(2, '0');
+      const dd = String(d).padStart(2, '0');
+      return `${y}-${mm}-${dd}`;
+    }
+
+    function formatYM(y, m) {
+      return `${y}-${String(m).padStart(2, '0')}`;
+    }
+
+    // 실제 오늘 기준 '지금이 몇 월인지' (조 변경 이력을 남길 때 사용)
+    function currentRealYM() {
+      return formatYM(now.getFullYear(), now.getMonth() + 1);
+    }
+
+    // 해당 회원이 특정 월(ym: 'YYYY-MM')에 속해 있던 조를 이력에서 찾는다.
+    // 그 달 마감 후 회원관리에서 조를 바꿔도 과거 달의 조는 바뀌지 않는다.
+    function getTeamForMonth(member, ym) {
+      const history = Array.isArray(member.teamHistory) && member.teamHistory.length
+        ? member.teamHistory
+        : [{ ym: '0000-01', team: member.team || '' }];
+      const applicable = history.filter(h => h.ym <= ym).sort((a, b) => a.ym < b.ym ? 1 : -1);
+      if (applicable.length) return applicable[0].team;
+      // 조회 월이 첫 이력보다 이전이면 가장 오래된 기록을 사용
+      const earliest = [...history].sort((a, b) => a.ym < b.ym ? -1 : 1)[0];
+      return earliest.team;
+    }
+
+    function onDistanceChange(dateStr, memberId, value) {
+      const numVal = parseFloat(value);
+      if (!recordsMap[dateStr]) recordsMap[dateStr] = {};
+      if (!isNaN(numVal) && numVal > 0) {
+        recordsMap[dateStr][memberId] = numVal;
+      } else {
+        delete recordsMap[dateStr][memberId];
+        if (Object.keys(recordsMap[dateStr]).length === 0) delete recordsMap[dateStr];
+      }
+      // 사용자가 직접 값을 수정하면, 운동 인증에서 자동으로 채워진 값이라는 표시를 지운다
+      if (autoFillMap[dateStr]) {
+        delete autoFillMap[dateStr][memberId];
+        if (Object.keys(autoFillMap[dateStr]).length === 0) delete autoFillMap[dateStr];
+      }
+      render();
+      saveRecords();
+    }
+
+    // 운동 인증 사진에서 자동 인식된 거리(km)를 일별 직접 입력 값으로 채운다.
+    // 사용자가 이미 직접 입력해 둔 값이 있어도, 인증 업로드가 "기본값"이 되도록 덮어쓰되
+    // 이후 일별 입력 화면에서 언제든 손으로 다시 고칠 수 있다.
+    function setAutoDistance(dateStr, memberId, km) {
+      if (!recordsMap[dateStr]) recordsMap[dateStr] = {};
+      recordsMap[dateStr][memberId] = km;
+      if (!autoFillMap[dateStr]) autoFillMap[dateStr] = {};
+      autoFillMap[dateStr][memberId] = true;
+      render();
+      saveRecords();
+    }
+
+    function renderLoading() {
+      const loadingMsg = '<p class="hint">데이터를 불러오는 중입니다...</p>';
+      document.getElementById('rankingList').innerHTML = loadingMsg;
+      document.getElementById('teamBattleList').innerHTML = loadingMsg;
+      document.getElementById('memberList').innerHTML = loadingMsg;
+      document.getElementById('inputTableBody').innerHTML = '';
+      document.getElementById('attendanceTableBody').innerHTML = '';
+      const uploadListEl = document.getElementById('uploadList');
+      if (uploadListEl) uploadListEl.innerHTML = loadingMsg;
+    }
+
+    function render() {
+      document.getElementById('monthDisplay').innerText = `${currentYear}.${String(currentMonth).padStart(2,'0')}`;
+      const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+      const weekDaysKorean = ['일', '월', '화', '수', '목', '금', '토'];
+
+      // [1] 일별 직접 입력 테이블
+      let headerHTML = '<th>이름</th>';
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(currentYear, currentMonth - 1, d);
+        const dayOfWeek = date.getDay();
+        let colorClass = (dayOfWeek === 1) ? 'header-mon' : (dayOfWeek === 0 ? 'header-sun' : '');
+        headerHTML += `<th class="${colorClass}">${d}일<span class="day-header">(${weekDaysKorean[dayOfWeek]})</span></th>`;
+      }
+      document.getElementById('inputTableHeader').innerHTML = headerHTML;
+
+      let bodyHTML = '';
+      const membersByName = [...members].sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+      membersByName.forEach(m => {
+        bodyHTML += `<tr><td><div class="input-name-cell"><span>${m.name}</span>${m.team ? `<span class="input-name-team">${m.team}</span>` : ''}</div></td>`;
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateStr = formatDate(currentYear, currentMonth, d);
+          const val = (recordsMap[dateStr] && recordsMap[dateStr][m.id]) ? recordsMap[dateStr][m.id] : '';
+          const isAuto = !!(autoFillMap[dateStr] && autoFillMap[dateStr][m.id]);
+          bodyHTML += `<td><input type="number" step="0.1" class="day-input ${isAuto ? 'auto-filled' : ''}" value="${val}" title="${isAuto ? '운동 인증 사진에서 자동 인식된 값 (직접 수정 가능)' : ''}" onchange="onDistanceChange('${dateStr}', ${m.id}, this.value)" /></td>`;
+        }
+        bodyHTML += `</tr>`;
+      });
+      document.getElementById('inputTableBody').innerHTML = bodyHTML;
+
+      // [1-1] 운동 기록 체크(출석) 테이블 - TOTAL(운동 완료 합산) 많은 순, 동률이면 가나다순 정렬
+      const attHeaderHTML = '<th>이름</th><th>TOTAL</th>' + headerHTML.slice('<th>이름</th>'.length);
+      document.getElementById('attendanceTableHeader').innerHTML = attHeaderHTML;
+      const membersByAttTotal = members.map(m => {
+        let total = 0;
+        for (let d = 1; d <= daysInMonth; d++) {
+          const attKey = `${currentYear}-${String(currentMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}-${m.id}`;
+          if (attendanceMap[attKey]) total++;
+        }
+        return { ...m, attTotal: total };
+      }).sort((a, b) => (b.attTotal - a.attTotal) || a.name.localeCompare(b.name, 'ko'));
+      let attBodyHTML = '';
+      membersByAttTotal.forEach(m => {
+        attBodyHTML += `<tr><td><div class="input-name-cell"><span>${m.name}</span>${m.team ? `<span class="input-name-team">${m.team}</span>` : ''}</div></td><td>${m.attTotal}회</td>`;
+        for (let d = 1; d <= daysInMonth; d++) {
+          const attKey = `${currentYear}-${String(currentMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}-${m.id}`;
+          const on = !!attendanceMap[attKey];
+          attBodyHTML += `<td><span class="att-check ${on ? 'on' : ''}" title="운동 인증 업로드로만 체크됩니다">${on ? '✓' : ''}</span></td>`;
+        }
+        attBodyHTML += `</tr>`;
+      });
+      document.getElementById('attendanceTableBody').innerHTML = attBodyHTML;
+
+      // [1-2] 운동 인증 업로드 - 회원 선택 옵션과 업로드 목록
+      const uploadMemberSelect = document.getElementById('uploadMember');
+      if (uploadMemberSelect) {
+        const prevVal = uploadMemberSelect.value;
+        uploadMemberSelect.innerHTML = membersByName.map(m => `<option value="${m.id}">${m.name}${m.team ? ' (' + m.team + ')' : ''}</option>`).join('');
+        if (membersByName.some(m => String(m.id) === prevVal)) uploadMemberSelect.value = prevVal;
+      }
+      const uploadCountEl = document.getElementById('uploadCount');
+      if (uploadCountEl) uploadCountEl.textContent = uploadRecords.length ? `(${uploadRecords.length})` : '';
+      const uploadListEl = document.getElementById('uploadList');
+      if (uploadListEl) {
+        uploadListEl.innerHTML = uploadRecords.length ? uploadRecords.map(u => {
+          const mem = members.find(x => String(x.id) === String(u.memberId));
+          const isImage = u.fileType && u.fileType.startsWith('image/');
+          const thumb = (u.downloadUrl && isImage)
+            ? `<a href="${u.downloadUrl}" target="_blank" rel="noopener"><img class="upload-thumb" src="${u.downloadUrl}" /></a>`
+            : `<span class="upload-fileicon">📎</span>`;
+          const statusText = u.status === 'syncing' ? '저장 중…' : u.status === 'error' ? '저장 실패' : '✓ 완료';
+          const statusClass = u.status === 'syncing' ? 'syncing' : u.status === 'error' ? 'error' : '';
+          let distanceBadge = '';
+          if (u.ocrStatus === 'processing') distanceBadge = `<span class="upload-distance-badge not-found" title="거리 인식 중… (처음 한 번은 다소 오래 걸릴 수 있어요)">인식중</span>`;
+          else if (u.ocrStatus === 'recognized' && u.distanceKm != null) distanceBadge = `<span class="upload-distance-badge" title="${u.distanceKm.toFixed(2)}km 자동 인식">인식 ${u.distanceKm.toFixed(2)}km</span>`;
+          else if (u.ocrStatus === 'not_found') distanceBadge = `<span class="upload-distance-badge not-found" title="거리 인식 실패 (직접 입력 필요)">실패</span>`;
+          else if (u.ocrStatus === 'engine_error') distanceBadge = `<span class="upload-distance-badge not-found" title="OCR 엔진 로드 실패 - 브라우저 콘솔(F12) 확인 필요">실패</span>`;
+          return `
+            <div class="upload-row">
+              ${thumb}
+              <div class="upload-info">
+                <strong>${mem ? mem.name : '삭제된 회원'}</strong>
+                <span>${u.date} · ${u.fileName}</span>
+              </div>
+              <div class="upload-status-col">
+                <span class="upload-status ${statusClass}">${statusText}</span>
+                ${distanceBadge}
+              </div>
+              <button class="btn-danger" onclick="deleteUpload('${u.id}')">삭제</button>
+            </div>
+          `;
+        }).join('') : `<p class="hint">아직 업로드한 운동 인증이 없습니다.</p>`;
+      }
+
+      // [2] 개인별 월 누계 계산 (대시보드 순위용)
+      const viewedYM = formatYM(currentYear, currentMonth);
+      const monthStats = members.map(m => {
+        let monthTotal = 0;
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateStr = formatDate(currentYear, currentMonth, d);
+          if (recordsMap[dateStr] && recordsMap[dateStr][m.id]) monthTotal += recordsMap[dateStr][m.id];
+        }
+        // 그 달 당시 소속되어 있던 조 (이후에 회원관리에서 조를 바꿔도 과거 달은 변하지 않음)
+        const teamAtMonth = getTeamForMonth(m, viewedYM);
+        return { ...m, monthTotal, team: teamAtMonth };
+      });
+
+      // [3] 대시보드 - 이달의 순위 (TOP 7)
+      const sortedRank = [...monthStats].sort((a, b) => b.monthTotal - a.monthTotal);
+      const topTotal = sortedRank.length ? Math.max(...sortedRank.map(m => m.monthTotal), 1) : 1;
+      const top10 = sortedRank.slice(0, 10);
+      const rankClass = i => i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : '';
+      document.getElementById('rankingList').innerHTML = top10.map((m, i) => `
+        <div class="rank-row ${i === 0 ? 'gold' : ''}">
+          <div class="rank-left">
+            <span class="rank-badge ${rankClass(i)}">${i + 1}</span>
+            <div class="rank-name-wrap">
+              <span class="rank-name">${m.name}</span>
+              ${m.team ? `<span class="rank-team-tag">${m.team}</span>` : ''}
+            </div>
+          </div>
+          <div class="rank-right">
+            <div class="rank-bar"><div class="rank-bar-fill" style="width:${(m.monthTotal / topTotal) * 100}%;"></div></div>
+            <span class="rank-km">${m.monthTotal.toFixed(1)} km</span>
+          </div>
+        </div>
+      `).join('') || `<p class="hint">등록된 회원이 없습니다.</p>`;
+
+      // [4] 대시보드 - 조별 대결 (이달 누계 기준)
+      const teamMap = {};
+      monthStats.forEach(m => {
+        const teamKey = (m.team && m.team.trim()) ? m.team.trim() : '미배정';
+        if (!teamMap[teamKey]) teamMap[teamKey] = { team: teamKey, total: 0, members: [] };
+        teamMap[teamKey].total += m.monthTotal;
+        teamMap[teamKey].members.push(m);
+      });
+      const teamsSorted = Object.values(teamMap).sort((a, b) => b.total - a.total);
+      const leaderTotal = teamsSorted.length ? teamsSorted[0].total : 0;
+      let teamHTML = '';
+      if (teamsSorted.length === 0) {
+        teamHTML += `<p class="empty-team-hint">회원관리에서 이름과 조를 등록하면<br>조별 대결 현황이 표시됩니다.</p>`;
+      } else {
+        teamsSorted.forEach((t, i) => {
+          const gap = leaderTotal - t.total;
+          const memberMax = Math.max(...t.members.map(m => m.monthTotal), 1);
+          const membersSorted = [...t.members].sort((a, b) => b.monthTotal - a.monthTotal);
+          teamHTML += `
+            <div class="team-card ${i === 0 ? 'leader' : ''}">
+              <div class="team-head">
+                <div class="team-head-left">
+                  <span class="team-rank-badge ${rankClass(i)}">${i + 1}</span>
+                  <span class="team-name">${t.team}</span>
+                </div>
+                <div class="team-meta">
+                  ${i === 0
+                    ? `<span class="team-gap lead">🔥 선두</span>`
+                    : `<span class="team-gap">선두와 -${gap.toFixed(1)}km</span>`}
+                  <span class="team-total">${t.total.toFixed(1)} km</span>
+                </div>
+              </div>
+              ${membersSorted.map(m => `
+                <div class="member-mini-row">
+                  <span class="member-mini-name">${m.name}</span>
+                  <div class="member-mini-bar"><div class="member-mini-fill" style="width:${Math.min(100, (m.monthTotal / memberMax) * 100)}%;"></div></div>
+                  <span class="member-mini-km">${m.monthTotal.toFixed(1)}km</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        });
+      }
+      document.getElementById('teamBattleList').innerHTML = teamHTML;
+
+      // [5] 회원 관리
+      document.getElementById('memberList').innerHTML = members.map(m => {
+        if (editingMemberId === m.id) {
+          return `
+            <div class="member-row">
+              <div class="member-edit-inputs">
+                <input type="text" id="editName_${m.id}" value="${m.name}" placeholder="이름" />
+                <input type="text" id="editTeam_${m.id}" value="${m.team || ''}" placeholder="조" />
+              </div>
+              <div class="member-row-actions">
+                <button class="btn-save" onclick="saveMemberEdit(${m.id})">저장</button>
+                <button class="btn-edit" onclick="cancelMemberEdit()">취소</button>
+              </div>
+            </div>
+          `;
+        }
+        return `
+        <div class="member-row">
+          <div class="member-left">
+            <span class="avatar">${m.name.charAt(0)}</span>
+            <div class="member-name-wrap">
+              <span style="font-weight:700;">${m.name}</span>
+              ${m.team ? `<span class="member-team-badge">${m.team}</span>` : ''}
+            </div>
+          </div>
+          <div class="member-row-actions">
+            <button class="btn-edit" onclick="startMemberEdit(${m.id})">수정</button>
+            <button class="btn-danger" onclick="deleteMember(${m.id})">삭제</button>
+          </div>
+        </div>
+      `;
+      }).join('') || `<p class="hint">등록된 회원이 없습니다.</p>`;
+    }
+
+    document.getElementById('memberForm').onsubmit = function(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('newMemberName');
+      const teamInput = document.getElementById('newMemberTeam');
+      if (!nameInput.value.trim() || !teamInput.value.trim()) return;
+      const teamVal = teamInput.value.trim();
+      members.push({
+        id: Date.now(),
+        name: nameInput.value.trim(),
+        team: teamVal,
+        teamHistory: [{ ym: currentRealYM(), team: teamVal }]
+      });
+      nameInput.value = '';
+      teamInput.value = '';
+      render();
+      saveMembers();
+    };
+
+    function deleteMember(id) {
+      if (confirm('정말 삭제하시겠습니까?')) {
+        members = members.filter(m => m.id !== id);
+        render();
+        saveMembers();
+      }
+    }
+
+    function startMemberEdit(id) {
+      editingMemberId = id;
+      render();
+    }
+
+    function cancelMemberEdit() {
+      editingMemberId = null;
+      render();
+    }
+
+    function saveMemberEdit(id) {
+      const nameInput = document.getElementById('editName_' + id);
+      const teamInput = document.getElementById('editTeam_' + id);
+      const newName = nameInput.value.trim();
+      const newTeam = teamInput.value.trim();
+      if (!newName || !newTeam) {
+        alert('이름과 조를 모두 입력해주세요.');
+        return;
+      }
+      members = members.map(m => {
+        if (m.id !== id) return m;
+        let teamHistory = Array.isArray(m.teamHistory) && m.teamHistory.length
+          ? [...m.teamHistory]
+          : [{ ym: '0000-01', team: m.team || '' }];
+        if (newTeam !== m.team) {
+          const ym = currentRealYM();
+          // 같은 달에 이미 이력을 남긴 적이 있으면 그 이력만 갱신 (중복 방지)
+          const idx = teamHistory.findIndex(h => h.ym === ym);
+          if (idx >= 0) teamHistory[idx] = { ym, team: newTeam };
+          else teamHistory.push({ ym, team: newTeam });
+        }
+        return { ...m, name: newName, team: newTeam, teamHistory };
+      });
+      editingMemberId = null;
+      render();
+      saveMembers();
+    }
+
+    // ===== 운동 기록 체크(출석) =====
+    // 운동 기록은 더 이상 화면에서 직접 체크/해제할 수 없고, 운동 인증(사진) 업로드/삭제에
+    // 따라서만 자동으로 체크되거나 해제된다 (업로드 핸들러, deleteUpload 함수 참고).
+
+    // ===== 운동 인증 사진에서 거리(km) 자동 인식 (OCR) =====
+    // 페이스(예: 6:14 /km, 6.14/km)는 제외하고, "4.16 km"처럼 슬래시 없이
+    // km로 끝나는 소수점 숫자만 거리로 인식한다. 날짜에 쳐진 동그라미 등은 무시.
+    // 실제 캡처들로 테스트해보니 OCR이 "km"을 "in"/"kin"/"kan" 등으로 잘못 읽는
+    // 경우가 있어, 정확한 "km" 표기가 안 잡히면 이런 오인식 표기도 보조로 확인한다.
+    // allowFuzzy=false(엄격 모드)일 때는 "km"이 아니라 "kin/kan/in"처럼 OCR이 단위를
+    // 어렴풋이 오인식한 경우까지 인정하는 fuzzy 매칭을 쓰지 않는다. fuzzy 매칭은 종종
+    // 숫자 자체도 일부만 읽힌 상태("3.0 kan" ← 실제로는 "3.02 km")에서 매치되어 버려서,
+    // 이 값이 멀티패스 루프를 통째로 조기 종료시켜 더 나은 뒤 단계(재시도/단독숫자추정/
+    // 한글 전용 엔진)가 아예 실행되지 못하게 만드는 문제가 있었다. 그래서 각 패스 안에서는
+    // 엄격 모드로만 호출하고, fuzzy 매칭은 모든 패스가 끝난 뒤 별도의 마지막 수단으로만 쓴다.
+    function extractDistanceKm(rawText, allowFuzzy = true) {
+      if (!rawText) return null;
+      const text = rawText.replace(/,/g, '.');
+
+      // 이 앱들은 실제로는 항상 소수점 "둘째 자리"까지 거리를 표시한다(3.02, 5.89 등).
+      // 그래서 소수점이 한 자리만("3.0") 인식된 경우는 대부분 진짜 값이 아니라, 끝자리
+      // 숫자가 OCR에서 통째로 빠진 것이다(예: 실제 "3.02" → "3.0"으로 오인식).
+      // requireTwoDecimals=true(엄격)는 이런 잘림을 걸러내기 위해 소수점 두 자리인
+      // 경우만 인정하고, false(느슨)는 소수점 한 자리도 허용한다.
+      function findCandidates(unitAlt, requireTwoDecimals) {
+        const numPattern = requireTwoDecimals ? '([0-9]{1,3}\\.[0-9]{2})' : '([0-9]{1,3}\\.[0-9]{1,2})';
+        // (?!\s*\/) : "km/h"(평균 속도)처럼 단위 뒤에 슬래시가 붙는 경우는 제외
+        const regex = new RegExp(numPattern + '\\s*(\\/?)\\s*(?:' + unitAlt + ')\\b(?!\\s*\\/)', 'gi');
+        const list = [];
+        let m;
+        while ((m = regex.exec(text)) !== null) {
+          if (m[2] === '/') continue; // "X.XX /km" 형태는 페이스이므로 제외
+          const num = parseFloat(m[1]);
+          if (!isNaN(num) && num > 0 && num < 200) list.push(num);
+        }
+        return list;
+      }
+
+      // 나이키 런 클럽 앱처럼 숫자 바로 옆에 "km" 단위가 아니라, 숫자 아래(줄바꿈 후)에
+      // "킬로미터"라는 한글 단위가 따로 표시되는 경우를 위한 보조 패턴.
+      // 숫자와 단위 사이에 줄바꿈/공백 등이 끼는 경우가 많아 최대 15자 이내로 근접한 경우만 인정하고,
+      // OCR이 한글을 살짝 오인식하는 경우까지 대비해 흔한 오인식 표기도 함께 허용한다.
+      function findKoreanKmCandidates(requireTwoDecimals) {
+        const numPattern = requireTwoDecimals ? '([0-9]{1,3}\\.[0-9]{2})' : '([0-9]{1,3}\\.[0-9]{1,2})';
+        const regex = new RegExp(numPattern + '[^0-9]{0,15}?(?:킬로\\s*미터|칼로\\s*미터|낄로\\s*미터|킬로미터)', 'g');
+        const list = [];
+        let m;
+        while ((m = regex.exec(text)) !== null) {
+          const num = parseFloat(m[1]);
+          if (!isNaN(num) && num > 0 && num < 200) list.push(num);
+        }
+        return list;
+      }
+
+      // 1) 가장 믿을 수 있는 조합: 정확한 "km" 단위 + 소수점 두 자리 숫자 → 바로 채택.
+      // 2) allowFuzzy(느슨 모드)일 때만: 소수점 한 자리만 읽힌 경우(끝자리 잘림 의심),
+      //    또는 "kin/kan/in"처럼 단위 자체가 fuzzy하게 읽힌 경우까지 확장해서 재시도.
+      let candidates = findCandidates('km', true);
+      if (!candidates.length && allowFuzzy) candidates = findCandidates('km', false);
+      if (!candidates.length && allowFuzzy) candidates = findCandidates('km|kin|kan|in', false);
+      if (!candidates.length) candidates = findKoreanKmCandidates(true);
+      if (!candidates.length && allowFuzzy) candidates = findKoreanKmCandidates(false);
+      if (!candidates.length) return null;
+      // 여러 후보가 인식되면, 총 거리 표시가 가장 크게 나오는 경우가 많으므로 최댓값을 사용
+      return Math.max(...candidates);
+    }
+
+    // 구글 맵/스트라바처럼 "3.60 / 23:30 / 6:32 / 195" 같은 값들이 한 줄에 먼저 나오고
+    // "km / 시간 / /km / 칼로리" 같은 단위들이 그 아래 줄에 따로 나오는 표(테이블) 레이아웃은
+    // 텍스트만으로는 숫자와 단위가 멀리 떨어져 있어서 위 정규식으로 못 잡는다.
+    // 이런 경우를 위해 각 단어의 화면상 좌표(bounding box)를 이용해, "km"/"킬로미터"라고
+    // 적힌 단어와 화면상 가장 가까운(=같은 칸에 있을 가능성이 높은) 숫자를 짝지어준다.
+    // requireTwoDecimals=true(엄격, 기본값)에서는 소수점 두 자리 숫자 단어만 인정한다.
+    // "4.19"가 "4.1"과 "9"(혹은 엉뚱한 글자 "A")로 쪼개져 인식되는 경우, 쪼개진 "4.1"이
+    // "km" 단어와 화면상 가까이 있다는 이유만으로 잘못 짝지어지는 걸 막기 위함이다
+    // (실제로 "4.1 A km" 형태로 읽혀서 4.19가 4.10으로 잘못 채택된 사례가 있었다).
+    // false(느슨)는 소수점 한 자리도 허용하며, 다른 모든 방법이 실패했을 때 마지막
+    // 수단으로만 사용한다.
+    function extractDistanceKmFromWords(words, requireTwoDecimals) {
+      if (!words || !words.length) return null;
+      const unitRe = /^(km|킬로미터|칼로미터|낄로미터)[.,]?$/i;
+      const numRe = requireTwoDecimals ? /^([0-9]{1,3}\.[0-9]{2})$/ : /^([0-9]{1,3}\.[0-9]{1,2})$/;
+      // 실제 인증 사진(잠금화면 상태바, 앱 메뉴, 지도 등 잡다한 글자가 많이 섞인 화면)으로
+      // 테스트해보니, 신뢰도가 낮은 글자에서 우연히 "km"처럼 읽힌 노이즈가 엉뚱한 숫자와
+      // 짝지어져 오답을 내는 경우가 있었다. 이를 막기 위해 (1) 신뢰도가 낮은 글자는
+      // 후보에서 제외하고 (2) 실제로 화면상 "같은 칸"이라고 볼 수 있을 만큼 가까운
+      // 경우에만 짝을 인정한다.
+      const MIN_CONF = 55;
+      const unitWords = [];
+      const numberWords = [];
+      words.forEach(w => {
+        const text = (w && w.text ? String(w.text) : '').trim();
+        if (!text || !w.bbox) return;
+        const conf = typeof w.confidence === 'number' ? w.confidence : 100;
+        if (conf < MIN_CONF) return;
+        if (unitRe.test(text)) {
+          unitWords.push(w.bbox);
+        } else {
+          const cleaned = text.replace(/,/g, '.');
+          const m = cleaned.match(numRe);
+          const num = m ? parseFloat(m[1]) : NaN;
+          if (m && !isNaN(num) && num > 0 && num < 200) numberWords.push({ num, bbox: w.bbox });
+        }
+      });
+      if (!unitWords.length || !numberWords.length) return null;
+      const center = b => ({ x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2 });
+      let best = null, bestDist = Infinity;
+      numberWords.forEach(nw => {
+        const c1 = center(nw.bbox);
+        unitWords.forEach(ub => {
+          const c2 = center(ub);
+          const d = Math.hypot(c1.x - c2.x, c1.y - c2.y);
+          const unitH = Math.max(1, ub.y1 - ub.y0);
+          const maxDist = unitH * 6; // 단위 글자 높이의 6배 이내(=같은 칸)만 인정
+          if (d <= maxDist && d < bestDist) { bestDist = d; best = nw.num; }
+        });
+      });
+      return best;
+    }
+
+    // 일반 텍스트 정규식(extractDistanceKm)은 "숫자.숫자 km" 형태만 맞으면 통과시키기
+    // 때문에, 숫자 하나가 아예 다른 글자로 잘못 읽힌 경우(예: 실제 "7.01" → "1.01"처럼
+    // 앞자리 숫자 자체가 다른 숫자로 오인식된 경우)는 구조적으로 멀쩡해 보여서 걸러내지
+    // 못한다. 이런 경우를 조금이라도 줄이기 위해, 정규식으로 찾은 숫자와 정확히 같은
+    // 글자를 단어 목록에서 찾아 그 글자 자체의 신뢰도를 확인한다. 신뢰도가 너무 낮으면
+    // "숫자 자체가 잘못 읽혔을 가능성"으로 보고 이 매치를 보류시켜, 다른 재시도 단계가
+    // 더 나은 결과를 낼 기회를 준다. (단어를 못 찾으면 판단할 수 없으니 그냥 통과시킨다.)
+    function findNumberWordConfidence(words, value) {
+      if (!words || !words.length) return null;
+      for (const w of words) {
+        const text = (w && w.text ? String(w.text) : '').trim().replace(/,/g, '.');
+        // 앞뒤에 붙은 하이픈/마침표 등 잡글자는 무시하고 숫자 부분만 비교한다
+        // (예: "-15.14."처럼 단어 하나에 잡기호가 같이 묻어 나오는 경우가 있었다).
+        const m = text.match(/^[^0-9]*([0-9]{1,3}\.[0-9]{1,2})[^0-9]*$/);
+        if (!m) continue;
+        const num = parseFloat(m[1]);
+        if (!isNaN(num) && Math.abs(num - value) < 0.001) {
+          return typeof w.confidence === 'number' ? w.confidence : null;
+        }
+      }
+      return null;
+    }
+
+    // 실제 사진에서, "30.17"처럼 소수점 뒷자리 숫자가 폰트 간격 때문에 별도의 단어로
+    // 뚝 떨어져서 "30.1"과 "7"이 서로 다른 단어로 인식되는 경우가 있었다("30.1 7 km"
+    // 형태). 이러면 일반 텍스트 정규식은 물론, 소수점 두 자리를 요구하는 다른 방식으로도
+    // 못 잡는다. 이런 경우를 위해, 연속된 두 단어가 (1) 화면상 같은 줄에 (2) 바짝
+        // 붙어있고 (3) 앞 단어가 "숫자.숫자"(소수점 한 자리)이고 뒷 단어가 숫자 하나뿐이며
+    // (4) 근처에 단위(km 등)로 볼 만한 단어가 있을 때만, 둘을 이어붙여 원래 값을
+    // 복원한다. 조건을 이렇게 까다롭게 두는 이유는, 아무 숫자나 이어붙이면 전혀
+    // 상관없는 숫자들(예: 페이스의 분/초)까지 잘못 합쳐질 위험이 크기 때문이다.
+    function findSplitDecimalCandidate(words) {
+      if (!words || words.length < 2) return null;
+      const unitRe = /^(km|킬로미터|칼로미터|낄로미터|kin|kan|in)[.,]?$/i;
+      const candidates = [];
+      for (let i = 0; i < words.length - 1; i++) {
+        const w1 = words[i], w2 = words[i + 1];
+        if (!w1 || !w2 || !w1.text || !w2.text || !w1.bbox || !w2.bbox) continue;
+        const t1 = String(w1.text).trim().replace(/,/g, '.');
+        const t2 = String(w2.text).trim();
+        const m1 = t1.match(/^([0-9]{1,3}\.[0-9])$/); // 소수점 "한 자리"만 있는 숫자
+        const m2 = t2.match(/^([0-9])$/); // 숫자 하나만 있는 단어
+        if (!m1 || !m2) continue;
+        const b1 = w1.bbox, b2 = w2.bbox;
+        const h1 = Math.max(1, b1.y1 - b1.y0);
+        const sameLine = Math.abs(((b1.y0 + b1.y1) / 2) - ((b2.y0 + b2.y1) / 2)) < h1 * 0.7;
+        const gap = b2.x0 - b1.x1;
+        const closeEnough = gap > -h1 && gap < h1 * 1.5; // 살짝 겹치거나 약간 떨어진 정도까지만 허용
+        if (!sameLine || !closeEnough) continue;
+        // 같은 줄에서 조금 더 뒤쪽에 단위로 볼 만한 단어가 있는지 확인해서 신뢰도를 높인다.
+        let hasNearbyUnit = false;
+        for (let j = i; j < Math.min(words.length, i + 4); j++) {
+          const uw = words[j];
+          if (!uw || !uw.text || !uw.bbox) continue;
+          if (unitRe.test(String(uw.text).trim())) {
+            const uh = Math.max(1, uw.bbox.y1 - uw.bbox.y0);
+            const sameLineU = Math.abs(((uw.bbox.y0 + uw.bbox.y1) / 2) - ((b1.y0 + b1.y1) / 2)) < uh * 0.9;
+            if (sameLineU) { hasNearbyUnit = true; break; }
+          }
+        }
+        if (!hasNearbyUnit) continue;
+        const merged = parseFloat(m1[1] + m2[1]);
+        if (!isNaN(merged) && merged > 0 && merged < 200) candidates.push(merged);
+      }
+      // 후보가 여러 개면 어느 게 진짜인지 알 수 없으니 억지로 추정하지 않는다.
+      if (candidates.length !== 1) return null;
+      return candidates[0];
+    }
+
+    // 마지막 최후의 수단: "킬로미터" 캡션 글자 자체가 흐릿해서 OCR이 아예 못 읽어내는
+    // 경우가 있다 (숫자는 큼직하고 선명해서 잘 읽히는데, 그 밑의 작은 회색 글자는 잘
+    // 안 읽히는 경우). 이럴 때는 단위 글자를 찾을 수 없으니 위 두 방식으로는 거리를
+    // 못 찾는다. 대신, 페이스(6'04'', 9:10 처럼 따옴표/콜론이 붙는 표기)나 칼로리/케이던스
+    // 같은 정수와 달리, 소수점 둘째자리까지 있는 숫자가 다른 글자에 붙지 않고 혼자
+    // 떨어져서 등장하는 경우는 대부분 거리 표시이므로, 그런 후보가 텍스트 전체에서
+    // 정확히 하나뿐일 때에 한해 마지막으로 채택한다 (후보가 여러 개면 어느 게 진짜
+    // 거리인지 알 수 없으니 억지로 추정하지 않는다).
+    function extractLoneDecimalCandidate(rawText) {
+      if (!rawText) return null;
+      const text = rawText.replace(/,/g, '.');
+      // 뒤쪽 경계는 기본적으로 숫자/점/콜론/따옴표/슬래시를 제외하되, "15.14."처럼
+      // 뒤에 다른 숫자로 안 이어지는 "순수 종결 마침표"는 예외로 허용한다(원래는
+      // "2026.9.21."처럼 더 긴 숫자 사슬의 일부를 잘못 잘라내는 걸 막으려고 마침표를
+      // 무조건 제외했었는데, 실제로는 날짜 뒤에 찍힌 마침표 하나 때문에 멀쩡한
+      // "15.14" 같은 값까지 후보에서 빠지는 경우가 있었다).
+      const re = /(?:^|[^0-9.:'\/])([0-9]{1,2}\.[0-9]{2})(?:[^0-9.:'\/]|\.(?!\d)|$)/g;
+      const found = new Set();
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        const num = parseFloat(m[1]);
+        if (!isNaN(num) && num > 0 && num < 100) found.add(num);
+        re.lastIndex = m.index + m[0].length - 1; // 겹치는 매치도 놓치지 않도록 보정
+      }
+      if (found.size !== 1) return null;
+      return [...found][0];
+    }
+
+    // 여러 시도(패스)에서 나온 후보 값들을 다수결로 정리한다. 단, 후보가 여러 개인데
+    // 1등이 2개 이상 값에서 동률로 나온 경우(=서로 다른 값이 각각 한 번씩만 나와서
+    // 어느 게 맞는지 알 수 없는 경우)에는 아무 값이나 임의로 고르지 않고 null을
+    // 반환한다. 실제로 "3.34"와 "3.39"가 한 번씩 나온 경우(진짜 값은 3.37) 임의로
+    // 먼저 나온 값을 채택했더니 틀린 값이 그대로 확정되어 버리는 문제가 있었다.
+    // 이럴 땐 차라리 "실패"로 표시해서 사용자가 직접 입력하게 하는 편이 낫다.
+    function pickMajorityOrNull(candidates) {
+      if (!candidates || !candidates.length) return null;
+      const counts = new Map();
+      candidates.forEach(v => counts.set(v, (counts.get(v) || 0) + 1));
+      let bestVal = null, bestCount = 0, tie = false;
+      counts.forEach((count, val) => {
+        if (count > bestCount) { bestCount = count; bestVal = val; tie = false; }
+        else if (count === bestCount) { tie = true; }
+      });
+      if (tie) return null;
+      return bestVal;
+    }
+
+    // 이미지를 캔버스에 그려서 각 픽셀에 변환 함수(transformPixel)를 적용한 뒤
+    // PNG Blob으로 돌려준다. 인증 사진 레이아웃에 따라 필요한 전처리가 달라서
+    // 여러 버전(원본 대비 강화, 밝은 글자만 남기기 등)을 만들 때 공용으로 사용한다.
+    //
+    // maxLongSide(선택): 요즘 스마트폰 사진은 원본 해상도가 이미 커서(예: 3000x4000),
+    // 여기에 배율(scale)을 그대로 곱하면 캔버스가 지나치게 커져(예: 4배 시 12000x16000,
+    // 픽셀 1억 9천만개) 픽셀 단위 반복 처리가 몇 분씩 걸리거나 브라우저 탭이 멈추는
+    // 문제가 있었다("인식중"에서 안 넘어가는 원인). maxLongSide를 넘으면 배율을 자동으로
+    // 줄여서 최종 긴 변의 길이가 이 값을 넘지 않도록 한다(작은 사진은 그대로 배율 적용).
+    function transformImage(file, scale, transformPixel, maxLongSide) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+          try {
+            let effectiveScale = scale;
+            if (maxLongSide) {
+              const longSide = Math.max(img.width, img.height) * scale;
+              if (longSide > maxLongSide) {
+                effectiveScale = maxLongSide / Math.max(img.width, img.height);
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.round(img.width * effectiveScale));
+            canvas.height = Math.max(1, Math.round(img.height * effectiveScale));
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const d = imageData.data;
+            for (let i = 0; i < d.length; i += 4) {
+              transformPixel(d, i);
+            }
+            ctx.putImageData(imageData, 0, 0);
+            URL.revokeObjectURL(url);
+            canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('canvas toBlob 실패')), 'image/png');
+          } catch (err) {
+            URL.revokeObjectURL(url);
+            reject(err);
+          }
+        };
+        img.onerror = reject;
+        img.src = url;
+      });
+    }
+
+    // 요즘 스마트폰 사진(3000~4000px대 원본)에 배율을 곱했을 때 캔버스가 지나치게
+    // 커지는 걸 막기 위한 공통 상한선. 이보다 작은 사진은 원래 배율이 그대로 적용된다.
+    const PREPROCESS_MAX_LONG_SIDE = 2600;
+    const PREPROCESS_MAX_LONG_SIDE_HIRES = 3200; // 초고배율(4배) 시도는 상한을 조금 더 준다
+
+    // 흑백 변환 + 2배 확대 + 대비 강화 (지도/사진 위에 숫자가 흐릿하게 겹친 경우에 도움)
+    function preprocessContrast(file) {
+      const contrast = 1.6;
+      const intercept = 128 * (1 - contrast);
+      return transformImage(file, 2, (d, i) => {
+        const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+        let v = gray * contrast + intercept;
+        v = Math.max(0, Math.min(255, v));
+        d[i] = d[i + 1] = d[i + 2] = v;
+      }, PREPROCESS_MAX_LONG_SIDE);
+    }
+
+    // 2배 확대로도 "Image too small to scale" 경고가 뜰 만큼 원본 화질 자체가 낮은
+    // 사진을 위한 마지막 수단: 4배로 훨씬 크게 확대 + 대비 강화. 확대 배율이 크면
+    // 느려지고 다른 글자를 오히려 뭉개버릴 수도 있어서, 다른 모든 시도가 실패했을
+    // 때에만 한 번 더 써본다. (고해상도 원본 사진에 4배를 그대로 곱하면 캔버스가
+    // 너무 커져서 "인식중"에서 몇 분씩 멈추거나 탭이 다운되는 문제가 있었어서,
+    // 최종 긴 변 길이에 상한을 둔다.)
+    function preprocessContrastHiRes(file) {
+      const contrast = 1.6;
+      const intercept = 128 * (1 - contrast);
+      return transformImage(file, 4, (d, i) => {
+        const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+        let v = gray * contrast + intercept;
+        v = Math.max(0, Math.min(255, v));
+        d[i] = d[i + 1] = d[i + 2] = v;
+      }, PREPROCESS_MAX_LONG_SIDE_HIRES);
+    }
+
+    // 밝은(흰색에 가까운) 픽셀만 남기고 나머지는 전부 검게 처리
+    // (어두운 배경/컬러 그래픽 위에 흰색 숫자가 있는 경우에 도움)
+    function preprocessWhiteIsolate(file) {
+      return transformImage(file, 2, (d, i) => {
+        const isBright = d[i] > 170 && d[i + 1] > 170 && d[i + 2] > 170;
+        const v = isBright ? 255 : 0;
+        d[i] = d[i + 1] = d[i + 2] = v;
+      }, PREPROCESS_MAX_LONG_SIDE);
+    }
+
+    // 실제 인증 사진들로 테스트해보니 화면 레이아웃에 따라 잘 맞는 인식 방식이
+    // 서로 달라서, 여러 방식을 순서대로 시도하다가 거리(km)가 처음 인식되는
+    // 시점에 멈춘다. (앞 단계에서 이미 성공하면 뒤 단계는 실행하지 않음)
+    //
+    // { km, engineOk } 형태로 반환한다.
+    // - engineOk === false : OCR 엔진 자체가 실행되지 못했다 (CDN 로드 실패, 네트워크 차단 등).
+    //   이 경우는 "사진에서 거리를 못 찾음"이 아니라 "OCR을 아예 못 돌림"이므로 구분해서 보여줘야 한다.
+    // - engineOk === true, km === null : OCR은 정상적으로 돌았지만 거리 패턴을 못 찾음.
+    async function runOcrExtractKm(file) {
+      if (!file.type || !file.type.startsWith('image/')) return { km: null, engineOk: true };
+      if (typeof Tesseract === 'undefined') {
+        console.error('[OCR] Tesseract.js가 로드되지 않았습니다 (CDN 차단/네트워크 문제 가능성).');
+        return { km: null, engineOk: false };
+      }
+      let worker = null;
+      let engineOk = false; // 한 번이라도 recognize()가 정상적으로 끝나면 true
+      try {
+        // 기본 학습 데이터(lstm-fast)는 속도는 빠르지만 지도/사진 위에 겹친 숫자처럼
+        // 어려운 글자는 잘 놓친다. tessdata_best(정확도 우선 학습 데이터)를 대신 사용한다.
+        // tessdata_best는 압축(.gz) 파일을 제공하지 않으므로 gzip:false 필수.
+        // (한글 "킬로미터" 인식은 아래 5차 시도에서 별도의 가벼운 kor 엔진으로 처리한다.
+        //  eng+kor best 학습 데이터를 한 번에 불러오면 용량이 너무 커서 모바일 환경에서
+        //  엔진 초기화 자체가 실패하는 문제가 있었다.)
+        worker = await Tesseract.createWorker('eng', 1, {
+          langPath: 'https://cdn.jsdelivr.net/gh/tesseract-ocr/tessdata_best@main',
+          gzip: false
+        });
+
+        const engTexts = []; // 단위 글자를 못 찾았을 때 마지막으로 다시 살펴볼 원문들(+단어 좌표)
+        async function tryPass(label, image, psm) {
+          await worker.setParameters({ tessedit_pageseg_mode: psm });
+          const { data } = await worker.recognize(image);
+          engineOk = true;
+          console.log('[OCR][' + label + '] 인식된 텍스트:', data.text, '(신뢰도:', data.confidence, ')');
+          engTexts.push({ text: data.text, confidence: data.confidence, words: data.words });
+          // 먼저 일반 텍스트 패턴("4.16 km"처럼 숫자 바로 옆에 단위)으로 시도하고,
+          // 못 찾으면 숫자와 단위가 화면상 서로 떨어진 표 레이아웃(구글맵/스트라바 등)에
+          // 대비해 단어 좌표 기반으로도 한 번 더 시도한다.
+          // (엄격 모드: fuzzy 단위 매칭 "kin/kan/in"과 소수점 한 자리 숫자는 여기서 쓰지
+          //  않는다 — 불확실한 매치가 조기 채택되어 뒤의 더 나은 재시도 단계들을 건너뛰지
+          //  못하게 하기 위함. 예: "4.19"가 "4.1"+"A"로 쪼개져 읽혀서 "4.1 A km"처럼 나온
+          //  경우, 소수점 한 자리 숫자를 그대로 km 단어와 짝지으면 4.19가 4.10으로 잘못
+          //  채택된다.)
+          let result = extractDistanceKm(data.text, false);
+          // 구조적으로는 멀쩡해 보여도("1.01 km") 그 숫자 글자 자체의 인식 신뢰도가
+          // 너무 낮으면(=엉뚱한 숫자로 오인식됐을 가능성), 이 시점에서 바로 채택하지
+          // 않고 다른 재시도 단계로 넘긴다.
+          if (result != null && data.words && data.words.length) {
+            const MIN_NUM_CONF = 55;
+            const wordConf = findNumberWordConfidence(data.words, result);
+            if (wordConf != null && wordConf < MIN_NUM_CONF) {
+              console.warn('[OCR][' + label + '] 숫자 글자 신뢰도가 낮아(' + wordConf + ') 채택 보류:', result);
+              result = null;
+            }
+          }
+          if (result == null && data.words && data.words.length) {
+            result = extractDistanceKmFromWords(data.words, true);
+            if (result != null) console.log('[OCR][' + label + '] 좌표 기반으로 거리 인식:', result);
+          }
+          return result;
+        }
+
+        // 1차: 원본 사진, 균일한 한 블록으로 보고 인식 (깔끔한 앱 화면 캡처에 가장 잘 맞음)
+        let km = await tryPass('원본/단일블록', file, '6').catch(err => { console.warn('[OCR] 1차 실패', err); return null; });
+
+        // 2차: 원본 사진, 흩어진 텍스트로 보고 인식 (여러 통계가 흩어져 있는 화면에 도움)
+        if (km == null) km = await tryPass('원본/흩어진텍스트', file, '11').catch(err => { console.warn('[OCR] 2차 실패', err); return null; });
+
+        // 3차: 대비를 강화한 이미지로 재시도 (사진 위에 숫자가 흐릿하게 겹친 경우)
+        if (km == null) {
+          try {
+            const blob = await preprocessContrast(file);
+            km = await tryPass('대비강화', blob, '11').catch(err => { console.warn('[OCR] 3차 실패', err); return null; });
+          } catch (err) { console.warn('[OCR] 3차 전처리 실패', err); }
+        }
+
+        // 4차: 밝은 글자만 남긴 이미지로 마지막 시도 (어두운 배경 위 흰색 숫자)
+        if (km == null) {
+          try {
+            const blob = await preprocessWhiteIsolate(file);
+            km = await tryPass('밝은글자만', blob, '11').catch(err => { console.warn('[OCR] 4차 실패', err); return null; });
+          } catch (err) { console.warn('[OCR] 4차 전처리 실패', err); }
+        }
+
+        // 4-1차: 원본 사진 자체의 해상도가 낮아서("Image too small to scale" 경고가 뜨는
+        // 경우) 2배 확대로도 글자가 뭉개지는 사진을 위해, 훨씬 크게(4배) 확대해서 한 번
+        // 더 시도한다. 배율이 크면 다른 레이아웃에서는 오히려 성능만 느려지고 도움이
+        // 안 될 수 있어서, 다른 모든 일반 시도가 실패했을 때만 마지막으로 시도한다.
+        if (km == null) {
+          try {
+            const blob = await preprocessContrastHiRes(file);
+            km = await tryPass('초고배율확대', blob, '11').catch(err => { console.warn('[OCR] 4-1차 실패', err); return null; });
+          } catch (err) { console.warn('[OCR] 4-1차 전처리 실패', err); }
+        }
+
+        // 4-5차: 나이키 런 클럽처럼 숫자 밑에 작고 흐린 단위 글자("킬로미터")가 있어서
+        // 정작 숫자 자체는 영어 엔진이 이미 정확히 읽어놓고도, 옆에 단위 글자가 없다는
+        // 이유만으로 버려지는 경우가 있다. 무거운 한글 전용 엔진을 새로 띄우기 전에,
+        // 지금까지 읽은 원문들 중 소수점 숫자가 "정확히 하나만" 단독으로 등장하는 경우가
+        // 있으면 먼저 그 값을 거리로 채택한다 (여러 원문에서 서로 다른 값이 나오면
+        // 다수결로 정하고, 동률이면 먼저 읽힌 값을 우선한다).
+        if (km == null) {
+          // 전체 페이지 신뢰도는 배경의 잡다한 글자들 때문에 낮게 나오는 경우가 많아서,
+          // 정작 그 숫자 자체는 멀쩡하게 읽힌 경우까지 걸러버리는 문제가 있었다(예:
+          // 페이지 신뢰도 30인데 "15.14"라는 값 자체는 뚜렷하게 읽힌 경우). 그래서
+          // 가능하면 그 숫자 글자 자체의 신뢰도를 먼저 확인하고, 단어 목록에서 못
+          // 찾았을 때에만 기존처럼 페이지 전체 신뢰도로 대체 판단한다.
+          const MIN_TEXT_CONF = 45;
+          const MIN_NUM_CONF = 45;
+          const loneCandidates = [];
+          engTexts.forEach(({ text, confidence, words }) => {
+            const lone = extractLoneDecimalCandidate(text);
+            if (lone == null) return;
+            const wordConf = findNumberWordConfidence(words, lone);
+            if (wordConf != null) {
+              if (wordConf < MIN_NUM_CONF) return;
+            } else if (typeof confidence === 'number' && confidence < MIN_TEXT_CONF) {
+              return;
+            }
+            loneCandidates.push(lone);
+          });
+          if (loneCandidates.length) {
+            km = pickMajorityOrNull(loneCandidates);
+            console.log('[OCR][영어/단독숫자추정] 후보들:', loneCandidates, '-> 채택:', km);
+          }
+        }
+
+        // 4-6차: 위 모든 엄격 모드 시도가 실패한 경우에만, 마지막 수단으로 fuzzy 단위
+        // 매칭("km"이 "kin/kan/in"처럼 오인식된 경우)을 허용해서 지금까지 읽은 모든
+        // 원문을 다시 훑는다. (예: "3.0 kan" ← 실제로는 "3.02 km") 이 fuzzy 매치는
+        // 신뢰도가 낮으므로 다른 모든 방법이 실패했을 때만, 그리고 앞서와 같은 방식으로
+        // 여러 원문에서 나온 후보들을 다수결로 채택한다.
+        //
+        // 주의: 여기서는 위 단독숫자추정(4-5차)과 달리 전체 신뢰도 기준을 두지 않는다.
+        // 실제 테스트에서, 숫자+단위(비록 fuzzy하게 읽혔더라도)가 함께 붙어서 나온
+        // 경우는 숫자 하나만 덩그러니 있는 경우보다 훨씬 믿을 만한 증거였다. 예를 들어
+        // "4.14 kan"처럼 숫자와 단위가 붙어서 나온 원문은, 사진 전체의 배경 글자들
+        // 때문에 페이지 전체 신뢰도 점수는 낮게(30~40대) 나오더라도 숫자 자체는
+        // 정확한 경우가 많았다. 신뢰도 기준을 여기에도 걸면 이런 정상 케이스까지
+        // "실패"로 처리해버리는 문제가 있었다.
+        if (km == null) {
+          const fuzzyCandidates = [];
+          engTexts.forEach(({ text }) => {
+            const fuzzy = extractDistanceKm(text, true);
+            if (fuzzy != null) fuzzyCandidates.push(fuzzy);
+          });
+          if (fuzzyCandidates.length) {
+            km = pickMajorityOrNull(fuzzyCandidates);
+            console.log('[OCR][영어/fuzzy단위추정] 후보들:', fuzzyCandidates, '-> 채택:', km);
+          }
+        }
+
+        // 4-7차: 위 텍스트 기반 시도들이 모두 실패한 경우의 마지막 수단으로, 단어 좌표
+        // 기반 짝짓기를 이번엔 소수점 "한 자리"까지 허용해서(느슨 모드) 다시 시도한다.
+        // 예: "4.19"의 뒷자리 "9"가 별도의 엉뚱한 글자("A")로 떨어져 나가 "4.1 A km"처럼
+        // 인식된 경우, 텍스트 정규식으로는 절대 못 잡지만(사이에 낀 글자 때문에) 단어
+        // 좌표로는 "4.1"과 "km"이 화면상 가까이 붙어있다는 걸 알 수 있다. 다만 이렇게
+        // 잡은 값은 끝자리가 잘렸을 위험이 있으므로(예: 4.19 → 4.1), 다른 모든 정확한
+        // 방법이 실패했을 때에만 최후의 수단으로 사용한다.
+        if (km == null) {
+          const wordFallbackCandidates = [];
+          engTexts.forEach(({ words }) => {
+            const val = extractDistanceKmFromWords(words, false);
+            if (val != null) wordFallbackCandidates.push(val);
+          });
+          if (wordFallbackCandidates.length) {
+            km = pickMajorityOrNull(wordFallbackCandidates);
+            console.log('[OCR][영어/좌표기반 느슨추정] 후보들:', wordFallbackCandidates, '-> 채택:', km);
+          }
+        }
+
+        // 4-8차: "30.17"처럼 소수점 뒷자리 숫자가 폰트 간격 때문에 별도의 단어로 뚝
+        // 떨어져서 "30.1"과 "7"이 서로 다른 단어로 인식된 경우("30.1 7 km" 형태)를
+        // 위한 시도. 같은 줄에 바짝 붙어있고 근처에 단위가 있을 때만 두 단어를
+        // 이어붙여 원래 값을 복원한다(findSplitDecimalCandidate 참고).
+        if (km == null) {
+          const splitCandidates = [];
+          engTexts.forEach(({ words }) => {
+            const val = findSplitDecimalCandidate(words);
+            if (val != null) splitCandidates.push(val);
+          });
+          if (splitCandidates.length) {
+            km = pickMajorityOrNull(splitCandidates);
+            console.log('[OCR][영어/쪼개진소수점 복원] 후보들:', splitCandidates, '-> 채택:', km);
+          }
+        }
+
+        // 5차: 나이키 런 클럽 앱처럼 숫자 옆이 아니라 "킬로미터"라는 한글 단위가
+        // 따로 표시되는 화면을 위한 마지막 시도. 여기서만 한글(kor) 전용 엔진을 새로
+        // 띄운다. eng+kor을 한 번에 불러오면 용량이 너무 커서 엔진 초기화 자체가
+        // 실패했던 적이 있어, 언어 하나만(kor) tessdata_best로 불러와 정확도와
+        // 용량을 함께 확보한다.
+        if (km == null) {
+          let korWorker = null;
+          try {
+            korWorker = await Tesseract.createWorker('kor', 1, {
+              langPath: 'https://cdn.jsdelivr.net/gh/tesseract-ocr/tessdata_best@main',
+              gzip: false
+            });
+            const korTexts = []; // "킬로미터" 캡션이 안 읽혀서 못 찾았을 때 마지막으로 다시 살펴볼 원문들
+            async function tryKorPass(label, image, psm) {
+              await korWorker.setParameters({ tessedit_pageseg_mode: psm });
+              const { data } = await korWorker.recognize(image);
+              engineOk = true;
+              console.log('[OCR][' + label + '] 인식된 텍스트:', data.text, '(신뢰도:', data.confidence, ')');
+              korTexts.push({ text: data.text, confidence: data.confidence });
+              let result = extractDistanceKm(data.text, false); // 엄격 모드 (위와 동일한 이유)
+              if (result != null && data.words && data.words.length) {
+                const MIN_NUM_CONF = 55;
+                const wordConf = findNumberWordConfidence(data.words, result);
+                if (wordConf != null && wordConf < MIN_NUM_CONF) {
+                  console.warn('[OCR][' + label + '] 숫자 글자 신뢰도가 낮아(' + wordConf + ') 채택 보류:', result);
+                  result = null;
+                }
+              }
+              if (result == null && data.words && data.words.length) {
+                result = extractDistanceKmFromWords(data.words, true); // 엄격 모드: 소수점 두 자리만
+                if (result != null) console.log('[OCR][' + label + '] 좌표 기반으로 거리 인식:', result);
+              }
+              return result;
+            }
+            // 같은 사진을 서로 다른 방식(원본/컬럼 인식/확대+대비강화)으로 여러 번 읽어서
+            // 결과를 모은 뒤 가장 많이 나온 값을 채택한다. 나이키 런 클럽처럼 굵고 기울어진
+            // 폰트에서는 5↔3, 8↔3처럼 숫자 하나가 잘못 읽히는 경우가 있는데, 한 번의 인식
+            // 결과만 그대로 믿기보다 여러 시도를 교차 검증하면 오류를 크게 줄일 수 있다.
+            const korCandidates = [];
+            const r1 = await tryKorPass('한글/단일블록', file, '6').catch(err => { console.warn('[OCR] 5차 실패', err); return null; });
+            if (r1 != null) korCandidates.push(r1);
+
+            const r2 = await tryKorPass('한글/컬럼인식', file, '4').catch(err => { console.warn('[OCR] 5-2차 실패', err); return null; });
+            if (r2 != null) korCandidates.push(r2);
+
+            try {
+              const upscaled = await preprocessContrast(file); // 2배 확대 + 대비 강화
+              const r3 = await tryKorPass('한글/확대+대비강화', upscaled, '6').catch(err => { console.warn('[OCR] 5-3차 실패', err); return null; });
+              if (r3 != null) korCandidates.push(r3);
+            } catch (err) { console.warn('[OCR] 5-3차 전처리 실패', err); }
+
+            // "킬로미터" 단위 글자 자체를 OCR이 끝내 못 읽어낸 경우를 위한 최후의 시도.
+            // 지금까지 모은 원문들에서, 페이스/시간/칼로리 같은 다른 값과 헷갈릴 걱정 없이
+            // 소수점 둘째자리 숫자가 "정확히 하나만" 단독으로 등장하는 원문이 있다면 그 값을
+            // 거리로 채택한다 (숫자 자체는 앞서 큼직하고 선명하게 잘 읽혔을 가능성이 높다).
+            if (!korCandidates.length) {
+              const MIN_TEXT_CONF = 45; // 전체 인식 신뢰도가 너무 낮으면(=사진 자체가 흐릿/작음) 추측하지 않는다
+              korTexts.forEach(({ text, confidence }) => {
+                if (typeof confidence === 'number' && confidence < MIN_TEXT_CONF) return;
+                const lone = extractLoneDecimalCandidate(text);
+                if (lone != null) korCandidates.push(lone);
+              });
+              if (korCandidates.length) console.log('[OCR][한글/단독숫자추정] 후보들:', korCandidates);
+            }
+
+            if (korCandidates.length) {
+              // 다수결로 채택하되, 서로 다른 값들이 동률이면(=어느 게 맞는지 알 수
+              // 없으면) 임의로 아무거나 고르지 않고 실패로 처리한다.
+              km = pickMajorityOrNull(korCandidates);
+              console.log('[OCR][한글/최종] 후보들:', korCandidates, '-> 채택:', km);
+            }
+          } catch (err) {
+            console.warn('[OCR] 5차(한글) 실패', err);
+          } finally {
+            if (korWorker) { try { await korWorker.terminate(); } catch (e) { /* ignore */ } }
+          }
+        }
+
+        return { km, engineOk };
+      } catch (err) {
+        console.error('[OCR] 엔진 초기화/실행 실패', err);
+        return { km: null, engineOk };
+      } finally {
+        if (worker) {
+          try { await worker.terminate(); } catch (e) { /* ignore */ }
+        }
+      }
+    }
+
+    // ===== 운동 인증 업로드 =====
+    const uploadDateInput = document.getElementById('uploadDate');
+    if (uploadDateInput) uploadDateInput.value = new Date().toISOString().slice(0, 10);
+
+    const uploadFileInput = document.getElementById('uploadFile');
+    if (uploadFileInput) {
+      uploadFileInput.onchange = async function(e) {
+        const file = e.target.files[0];
+        const memberId = document.getElementById('uploadMember').value;
+        const date = document.getElementById('uploadDate').value;
+        if (!file || !memberId || !date) {
+          alert('회원과 날짜를 선택하고 파일을 첨부해주세요.');
+          return;
+        }
+        const id = 'u-' + Date.now();
+        const isImage = !!(file.type && file.type.startsWith('image/'));
+        const record = {
+          id, memberId, date,
+          fileName: file.name,
+          fileType: file.type || 'file',
+          fileSize: file.size,
+          uploadedAt: new Date().toLocaleString('ko-KR'),
+          status: 'syncing',
+          distanceKm: null,
+          ocrStatus: isImage ? 'processing' : 'skipped'
+        };
+        uploadRecords.unshift(record);
+
+        // 업로드한 날짜는 자동으로 운동 기록에 체크 표시
+        const [y, mo, d] = date.split('-').map(Number);
+        const attKey = `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}-${memberId}`;
+        attendanceMap[attKey] = true;
+
+        render();
+        saveAttendance();
+        saveUploads();
+        e.target.value = '';
+
+        // 1) 사진에서 거리(km) 자동 인식 → 일별 직접 입력의 기본값으로 채우기
+        if (isImage) {
+          // 지금 파이프라인은 최대 5차(영어) + 3차(한글) + 초고배율 재시도까지 이어질
+          // 수 있어서, 사진에 따라 실제로 1~2분 넘게 걸리는 경우가 있다(느린 것이지
+          // 멈춘 게 아니다). 다만 사용자 입장에서는 "인식중"에서 무한정 안 끝나는
+          // 것처럼 보이므로, 일정 시간(45초)을 넘기면 강제로 실패 처리해서 최소한
+          // 화면이 항상 결론이 나도록 한다(그 사이 백그라운드에서 계속 돌던 OCR
+          // 작업 자체는 계속 진행되다가 나중에 뒤늦게 끝날 수 있지만, 그 결과는
+          // 이미 실패로 확정된 이 레코드에는 반영되지 않는다).
+          const OCR_TIMEOUT_MS = 45000;
+          const ocrTimeout = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('OCR_TIMEOUT')), OCR_TIMEOUT_MS);
+          });
+          Promise.race([runOcrExtractKm(file), ocrTimeout]).then(({ km, engineOk }) => {
+            const idx = uploadRecords.findIndex(u => u.id === id);
+            if (idx >= 0) {
+              uploadRecords[idx].distanceKm = km;
+              uploadRecords[idx].ocrStatus = km != null ? 'recognized' : (engineOk ? 'not_found' : 'engine_error');
+            }
+            if (km != null) {
+              setAutoDistance(date, memberId, km); // render() + saveRecords() 포함
+            } else {
+              render();
+            }
+            saveUploads();
+          }).catch(err => {
+            // runOcrExtractKm 내부에서 예상 못한 오류가 나도(예: 브라우저 메모리 부족,
+            // 캔버스 처리 실패 등) "인식중" 상태로 영원히 멈춰 있지 않도록, 여기서
+            // 확실하게 실패로 마무리한다.
+            console.error('[OCR] 예상치 못한 오류로 인식 중단', err);
+            const idx = uploadRecords.findIndex(u => u.id === id);
+            if (idx >= 0) {
+              uploadRecords[idx].distanceKm = null;
+              uploadRecords[idx].ocrStatus = 'not_found';
+            }
+            render();
+            saveUploads();
+          });
+        }
+
+        // 2) Firebase Storage에 원본 파일 저장
+        try {
+          const fileRef = firebase.storage().ref().child('workout-proofs/' + id + '-' + file.name);
+          await fileRef.put(file);
+          const downloadUrl = await fileRef.getDownloadURL();
+          const idx = uploadRecords.findIndex(u => u.id === id);
+          if (idx >= 0) {
+            uploadRecords[idx].downloadUrl = downloadUrl;
+            uploadRecords[idx].status = 'synced';
+          }
+          render();
+          saveUploads();
+        } catch (err) {
+          console.error(err);
+          const idx = uploadRecords.findIndex(u => u.id === id);
+          if (idx >= 0) uploadRecords[idx].status = 'error';
+          render();
+          saveUploads();
+          alert('운동 기록은 체크했지만 파일 저장에 실패했습니다. Firebase Storage 설정을 확인해주세요.');
+        }
+      };
+    }
+
+    function deleteUpload(id) {
+      if (!confirm('정말 삭제하시겠습니까?')) return;
+      const removed = uploadRecords.find(u => u.id === id);
+      uploadRecords = uploadRecords.filter(u => u.id !== id);
+      if (removed) {
+        const hasOther = uploadRecords.some(u => String(u.memberId) === String(removed.memberId) && u.date === removed.date);
+        if (!hasOther) {
+          const [y, mo, d] = removed.date.split('-').map(Number);
+          const k = `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}-${removed.memberId}`;
+          delete attendanceMap[k];
+          saveAttendance();
+
+          // 이 인증 사진에서 자동 인식되어 채워졌던 일별 직접 입력 값도 함께 지운다.
+          // (업로드 이후 사용자가 직접 값을 고쳤다면 autoFillMap 표시가 이미 지워져 있어
+          //  그 수정 값은 보존된다.)
+          if (autoFillMap[removed.date] && autoFillMap[removed.date][removed.memberId]) {
+            if (recordsMap[removed.date]) {
+              delete recordsMap[removed.date][removed.memberId];
+              if (Object.keys(recordsMap[removed.date]).length === 0) delete recordsMap[removed.date];
+            }
+            delete autoFillMap[removed.date][removed.memberId];
+            if (Object.keys(autoFillMap[removed.date]).length === 0) delete autoFillMap[removed.date];
+            saveRecords();
+          }
+        }
+      }
+      render();
+      saveUploads();
+    }
+  </script>
+</body>
+</html>
